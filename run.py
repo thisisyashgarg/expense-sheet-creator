@@ -27,16 +27,9 @@ def extract(pattern, text):
 
 def extract_date(text):
     date_patterns = [
-        # Dec 16, 2025 / December 16, 2025
         (r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2},\s+\d{4}", "%b %d, %Y"),
-
-        # 16 Dec 2025
         (r"\d{1,2}\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{4}", "%d %b %Y"),
-
-        # 12/16/25 or 12/16/2025
         (r"\d{1,2}/\d{1,2}/\d{2,4}", None),
-
-        # 2025-12-16
         (r"\d{4}-\d{2}-\d{2}", "%Y-%m-%d")
     ]
 
@@ -61,6 +54,10 @@ def extract_date(text):
     return None
 
 
+# NOTE:
+# Google Drive folders MUST be shared as:
+# "Anyone with the link" → "Viewer"
+# Otherwise, gdown will NOT be able to download the files.
 def download_drive_folder(folder_url):
     temp_dir = tempfile.mkdtemp()
     gdown.download_folder(
@@ -95,8 +92,13 @@ if source == "Upload PDFs":
     pdf_files = uploaded_files or []
 
 elif source == "Google Drive Folder":
+    st.info(
+        "📁 Google Drive folder must be shared as "
+        "**Anyone with the link → Viewer** for this to work."
+    )
+
     folder_url = st.text_input(
-        "Paste Google Drive folder link (set to 'Anyone with link → Viewer')"
+        "Paste Google Drive folder link"
     )
 
     if folder_url:
