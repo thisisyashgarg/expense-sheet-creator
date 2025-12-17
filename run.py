@@ -13,9 +13,17 @@ st.set_page_config(
 )
 
 st.title("Uber Receipt → Expense CSV")
+
 st.write(
     "Upload Uber receipt PDFs **or** paste a Google Drive folder link "
     "to generate a consolidated expense CSV."
+)
+
+# ---------------- Employee Name Input ---------------- #
+
+employee_name_input = st.text_input(
+    "Employee Name (optional)",
+    placeholder="Leave empty to use name from receipt PDFs"
 )
 
 # ---------------- Utility Functions ---------------- #
@@ -97,9 +105,7 @@ elif source == "Google Drive Folder":
         "**Anyone with the link → Viewer** for this to work."
     )
 
-    folder_url = st.text_input(
-        "Paste Google Drive folder link"
-    )
+    folder_url = st.text_input("Paste Google Drive folder link")
 
     if folder_url:
         with st.spinner("Downloading PDFs from Google Drive..."):
@@ -119,9 +125,15 @@ if pdf_files:
         try:
             text = extract_text_from_pdf(file)
 
-            employee_name = (
+            pdf_employee_name = (
                 extract(r"Thanks for riding,\s*(.+)", text)
                 or extract(r"Here's your receipt for your ride,\s*(.+)", text)
+            )
+
+            final_employee_name = (
+                employee_name_input.strip()
+                if employee_name_input.strip()
+                else pdf_employee_name
             )
 
             date = extract_date(text)
@@ -130,7 +142,7 @@ if pdf_files:
             file_name = file.name if hasattr(file, "name") else os.path.basename(file)
 
             rows.append({
-                "Employee Name": employee_name,
+                "Employee Name": final_employee_name,
                 "Expense Vendor Name": "Uber",
                 "Expense Description": "uber booked for transportation between work and home",
                 "Date": date,
