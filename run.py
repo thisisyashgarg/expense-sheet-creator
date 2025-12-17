@@ -21,7 +21,7 @@ for filename in os.listdir(PDF_FOLDER):
     with pdfplumber.open(path) as pdf:
         text = "\n".join(page.extract_text() or "" for page in pdf.pages)
 
-    employee_name = extract(r"Thanks for riding,\s*(.+)", text)
+    employee_name = extract(r"Thanks for riding,\s*(.+)", text) or extract(r"Here's your receipt for your ride,\s*(.+)", text)
     date = extract(r"(Dec \d{1,2}, \d{4})", text)
     total = extract(r"Total ₹([\d.]+)", text)
     trip_type = extract(r"Trip details\s+(.+)", text)
