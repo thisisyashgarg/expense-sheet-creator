@@ -1,11 +1,13 @@
 import streamlit as st
-import pdfplumber
 import pandas as pd
-import re
-from datetime import datetime
-import gdown
-import tempfile
 import os
+
+from utils import (
+    extract,
+    extract_date,
+    download_drive_folder,
+    extract_text_from_pdf,
+)
 
 st.set_page_config(
     page_title="Uber Receipt → Expense CSV",
@@ -28,58 +30,13 @@ employee_name_input = st.text_input(
 
 # ---------------- Utility Functions ---------------- #
 
-def extract(pattern, text):
-    match = re.search(pattern, text, re.MULTILINE | re.IGNORECASE)
-    return match.group(1).strip() if match else None
-
-
-def extract_date(text):
-    date_patterns = [
-        (r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2},\s+\d{4}", "%b %d, %Y"),
-        (r"\d{1,2}\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{4}", "%d %b %Y"),
-        (r"\d{1,2}/\d{1,2}/\d{2,4}", None),
-        (r"\d{4}-\d{2}-\d{2}", "%Y-%m-%d")
-    ]
-
-    for pattern, fmt in date_patterns:
-        match = re.search(pattern, text)
-        if not match:
-            continue
-
-        raw_date = match.group(0)
-
-        try:
-            if fmt:
-                return datetime.strptime(raw_date, fmt).strftime("%Y-%m-%d")
-            else:
-                parts = raw_date.split("/")
-                if len(parts[2]) == 2:
-                    raw_date = f"{parts[0]}/{parts[1]}/20{parts[2]}"
-                return datetime.strptime(raw_date, "%m/%d/%Y").strftime("%Y-%m-%d")
-        except Exception:
-            continue
-
-    return None
-
 
 # NOTE:
 # Google Drive folders MUST be shared as:
 # "Anyone with the link" → "Viewer"
 # Otherwise, gdown will NOT be able to download the files.
-def download_drive_folder(folder_url):
-    temp_dir = tempfile.mkdtemp()
-    gdown.download_folder(
-        url=folder_url,
-        output=temp_dir,
-        quiet=True,
-        use_cookies=False
-    )
-    return temp_dir
-
-
-def extract_text_from_pdf(file):
-    with pdfplumber.open(file) as pdf:
-        return "\n".join(page.extract_text() or "" for page in pdf.pages)
+# utilities `extract`, `extract_date`, `download_drive_folder`, and `extract_text_from_pdf`
+# are provided by utils.py
 
 
 # ---------------- UI ---------------- #
