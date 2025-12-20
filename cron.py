@@ -22,11 +22,11 @@ from utils import (
 GDRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1lkNOkV3HpUE-o7iWfpsz-PNEIbz3Fb3Z"
 
 # Google Sheet config
-GOOGLE_SHEET_ID = "1ZoyuN_aFIa3S6_qNq_qpIqnb3k-GtTPSdPx3zPzALU0"   # e.g. 1AbCdEf...
+GOOGLE_SHEET_ID = "16qv2MlnbSF51dKXLSFLchI_ylJkgbHi4zsKekZIbK6E"   # e.g. 1AbCdEf...
 GOOGLE_SHEET_TAB_NAME = "Sheet1"                # change if needed
 
 # Service account JSON file path (for Google Sheets API)
-SERVICE_ACCOUNT_FILE = "/absolute/path/to/service_account.json"
+SERVICE_ACCOUNT_FILE = "uber-sheet-cron-5009f7af7bd6.json"
 
 # Optional: hard-code employee name instead of using the one from PDFs
 EMPLOYEE_NAME_OVERRIDE = None  # e.g. "Yash Garg" or leave as None
@@ -95,7 +95,7 @@ def process_pdfs_from_folder(folder_path):
                         "Expense Vendor Name": "Uber",
                         "Expense Description": "uber booked for transportation between work and home",
                         "Date": date,
-                        "Reference of Receipt (if applicable)": fname,
+                        "Reference of Receipt (if applicable)": os.path.basename(file_path),
                         "Total (Please indicate if INR or USD in accounting format)": f"INR {total}" if total else None,
                     }
                 )

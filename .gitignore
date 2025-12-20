@@ -1,2 +1,4 @@
 uber_receipts
 expense_report.csv
+.devcontainer
+__pycache__
