@@ -1,9 +1,9 @@
-name: Daily Uber Sheet Update
+name: Weekly Uber Sheet Update
 
 on:
   schedule:
-    # Runs every day at 8:00 AM IST (2:30 AM UTC)
-    - cron: '30 2 * * *'
+    # Runs every Monday at 8:00 AM IST (2:30 AM UTC)
+    - cron: '30 2 * * 1'
   workflow_dispatch:  # Allow manual trigger from GitHub UI
 
 jobs:
