@@ -2,3 +2,6 @@ uber_receipts
 expense_report.csv
 .devcontainer
 __pycache__
+
+# Service account credentials (NEVER commit these!)
+uber-sheet-cron-5009f7af7bd6.json
