@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 import os
-import re
-import tempfile
-from datetime import datetime
 
 import pandas as pd
 import gspread
@@ -32,41 +29,6 @@ SERVICE_ACCOUNT_FILE = "uber-sheet-cron-5009f7af7bd6.json"
 EMPLOYEE_NAME_OVERRIDE = None  # e.g. "Yash Garg" or leave as None
 
 # ============================================
-
-
-def extract(pattern, text):
-    match = re.search(pattern, text, re.MULTILINE | re.IGNORECASE)
-    return match.group(1).strip() if match else None
-
-
-def extract_date(text):
-    date_patterns = [
-        (r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2},\s+\d{4}", "%b %d, %Y"),
-        (r"\d{1,2}\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{4}", "%d %b %Y"),
-        (r"\d{1,2}/\d{1,2}/\d{2,4}", None),
-        (r"\d{4}-\d{2}-\d{2}", "%Y-%m-%d"),
-    ]
-
-    for pattern, fmt in date_patterns:
-        match = re.search(pattern, text)
-        if not match:
-            continue
-
-        raw_date = match.group(0)
-
-        try:
-            if fmt:
-                return datetime.strptime(raw_date, fmt).strftime("%Y-%m-%d")
-            else:
-                # assume mm/dd/yy or mm/dd/yyyy
-                parts = raw_date.split("/")
-                if len(parts[2]) == 2:
-                    raw_date = f"{parts[0]}/{parts[1]}/20{parts[2]}"
-                return datetime.strptime(raw_date, "%m/%d/%Y").strftime("%Y-%m-%d")
-        except Exception:
-            continue
-
-    return None
 
 
 def process_pdfs_from_folder(folder_path):
