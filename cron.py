@@ -26,7 +26,7 @@ GOOGLE_SHEET_TAB_NAME = "Sheet1"                # change if needed
 SERVICE_ACCOUNT_FILE = "uber-sheet-cron-5009f7af7bd6.json"
 
 # Optional: hard-code employee name instead of using the one from PDFs
-EMPLOYEE_NAME_OVERRIDE = None  # e.g. "Yash Garg" or leave as None
+EMPLOYEE_NAME_OVERRIDE = 'Yash Garg'  # e.g. "Yash Garg" or leave as None
 
 # ============================================
 
